@@ -10,7 +10,7 @@ name = "conduit-utils"
 
 [dependencies.conduit]
 
-git = "https://github.com/wycats/conduit.git"
+git = "https://github.com/conduit-rust/conduit.git"
 
 [dependencies.conduit-test]
 
