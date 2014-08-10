@@ -234,47 +234,47 @@ mod tests {
     #[test]
     fn test_header_map() {
         let mut map = HeaderMap(HashMap::new());
-        map.insert("Content-Type".to_str(), vec!("text/html".to_str()));
-        map.insert("location".to_str(), vec!("http://example.com".to_str()));
+        map.insert("Content-Type".to_string(), vec!("text/html".to_string()));
+        map.insert("location".to_string(), vec!("http://example.com".to_string()));
 
-        assert_eq!(map.find(&"content-type".to_str()), Some(&vec!("text/html".to_str())))
-        assert_eq!(map.find(&"Location".to_str()), Some(&vec!("http://example.com".to_str())))
-        assert_eq!(map.find(&"content-type"), Some(&vec!("text/html".to_str())))
-        assert_eq!(map.find(&"Location"), Some(&vec!("http://example.com".to_str())))
+        assert_eq!(map.find(&"content-type".to_string()), Some(&vec!("text/html".to_string())))
+        assert_eq!(map.find(&"Location".to_string()), Some(&vec!("http://example.com".to_string())))
+        assert_eq!(map.find(&"content-type"), Some(&vec!("text/html".to_string())))
+        assert_eq!(map.find(&"Location"), Some(&vec!("http://example.com".to_string())))
     }
 
     #[test]
     fn test_header_map_with_static_inserts() {
         let mut map = HeaderMap(HashMap::new());
-        map.insert("Content-Type", vec!("text/html".to_str()));
-        map.insert("location", vec!("http://example.com".to_str()));
+        map.insert("Content-Type", vec!("text/html".to_string()));
+        map.insert("location", vec!("http://example.com".to_string()));
 
-        assert_eq!(map.find(&"content-type".to_str()), Some(&vec!("text/html".to_str())))
-        assert_eq!(map.find(&"Location".to_str()), Some(&vec!("http://example.com".to_str())))
-        assert_eq!(map.find(&"content-type"), Some(&vec!("text/html".to_str())))
-        assert_eq!(map.find(&"Location"), Some(&vec!("http://example.com".to_str())))
+        assert_eq!(map.find(&"content-type".to_string()), Some(&vec!("text/html".to_string())))
+        assert_eq!(map.find(&"Location".to_string()), Some(&vec!("http://example.com".to_string())))
+        assert_eq!(map.find(&"content-type"), Some(&vec!("text/html".to_string())))
+        assert_eq!(map.find(&"Location"), Some(&vec!("http://example.com".to_string())))
     }
 
     #[test]
     fn test_normalize() {
         let mut map = HashMap::new();
-        map.insert("Content-Type".to_str(), vec!("text/html".to_str()));
+        map.insert("Content-Type".to_string(), vec!("text/html".to_string()));
 
         let headers = HeaderMap::normalize(map);
-        assert_eq!(headers.find(&"Content-Type".to_str()), Some(&vec!("text/html".to_str())))
-        assert_eq!(headers.find(&"Content-Type"), Some(&vec!("text/html".to_str())))
-        assert_eq!(headers.find(&"content-type".to_str()), Some(&vec!("text/html".to_str())))
-        assert_eq!(headers.find(&"content-type"), Some(&vec!("text/html".to_str())))
+        assert_eq!(headers.find(&"Content-Type".to_string()), Some(&vec!("text/html".to_string())))
+        assert_eq!(headers.find(&"Content-Type"), Some(&vec!("text/html".to_string())))
+        assert_eq!(headers.find(&"content-type".to_string()), Some(&vec!("text/html".to_string())))
+        assert_eq!(headers.find(&"content-type"), Some(&vec!("text/html".to_string())))
     }
 
     #[test]
     fn test_iterate() {
         let mut headers = HeaderMap(HashMap::new());
-        headers.insert("Content-Type", vec!("text/html".to_str()));
-        headers.insert("location", vec!("http://example.com".to_str()));
+        headers.insert("Content-Type", vec!("text/html".to_string()));
+        headers.insert("location", vec!("http://example.com".to_string()));
 
-        assert!(headers.iter().any(|t| t == ("content-type".to_str(), &vec!("text/html".to_str()))));
-        assert!(headers.iter().any(|t| t == ("location".to_str(), &vec!("http://example.com".to_str()))));
+        assert!(headers.iter().any(|t| t == ("content-type".to_string(), &vec!("text/html".to_string()))));
+        assert!(headers.iter().any(|t| t == ("location".to_string(), &vec!("http://example.com".to_string()))));
         assert!(headers.iter().count() == 2);
     }
 }
