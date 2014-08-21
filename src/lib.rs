@@ -198,7 +198,8 @@ fn to_lower<S: Str>(string: &S) -> String {
 #[cfg(test)]
 mod tests {
     extern crate test = "conduit-test";
-    use super::*;
+
+    use {RequestDelegator, HeaderMap};
 
     use std::collections::HashMap;
     use conduit;
