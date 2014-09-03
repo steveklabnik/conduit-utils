@@ -71,7 +71,7 @@ pub trait RequestDelegator {
     }
 }
 
-impl<'a> Request for &'a mut RequestDelegator {
+impl<'a> Request for &'a mut RequestDelegator + 'a {
     fn http_version(&self) -> semver::Version {
         self.http_version()
     }
@@ -206,7 +206,7 @@ mod tests {
     use conduit::{Request, Method};
 
     struct OverrideRequest<'a> {
-        request: &'a mut Request
+        request: &'a mut Request + 'a
     }
 
     impl<'a> RequestDelegator for OverrideRequest<'a> {
