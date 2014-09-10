@@ -197,7 +197,7 @@ fn to_lower<S: Str>(string: &S) -> String {
 
 #[cfg(test)]
 mod tests {
-    extern crate test = "conduit-test";
+    extern crate "conduit-test" as test;
 
     use {RequestDelegator, HeaderMap};
 
