@@ -138,7 +138,7 @@ pub struct HeaderMap(HashMap<String, Vec<String>>);
 
 impl HeaderMap {
     fn normalize(headers: HashMap<String, Vec<String>>) -> HeaderMap {
-        let headers = headers.move_iter().map(|(k,v)| (to_lower(&k), v)).collect();
+        let headers = headers.into_iter().map(|(k,v)| (to_lower(&k), v)).collect();
         HeaderMap(headers)
     }
 
@@ -226,10 +226,10 @@ mod tests {
     #[test]
     fn test_delegate() {
         let request = &mut test::MockRequest::new(conduit::Head, "/hello") as &mut Request;
-        let override = OverrideRequest { request: request };
+        let new = OverrideRequest { request: request };
 
-        assert_eq!(override.method(), conduit::Get);
-        assert_eq!(override.path(), "/hello");
+        assert_eq!(new.method(), conduit::Get);
+        assert_eq!(new.path(), "/hello");
     }
 
     #[test]
