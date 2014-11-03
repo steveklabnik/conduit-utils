@@ -157,36 +157,24 @@ impl HeaderMap {
             HeaderMap(ref mut map) => map
         }
     }
-}
 
-impl Collection for HeaderMap {
-    fn len(&self) -> uint {
+    pub fn len(&self) -> uint {
         self.as_ref().len()
     }
-}
-
-impl Mutable for HeaderMap {
-    fn clear(&mut self) {
+    pub fn clear(&mut self) {
         self.as_mut().clear()
     }
-}
-
-impl<S: Str> Map<S, Vec<String>> for HeaderMap {
-    fn find<'a>(&'a self, key: &S) -> Option<&'a Vec<String>> {
+    pub fn find<'a, S: Str>(&'a self, key: &S) -> Option<&'a Vec<String>> {
         self.as_ref().find(&to_lower(key))
     }
-}
-
-impl<S: Str> MutableMap<S, Vec<String>> for HeaderMap {
-    fn swap(&mut self, k: S, v: Vec<String>) -> Option<Vec<String>> {
+    pub fn insert<S: Str>(&mut self, k: S, v: Vec<String>) -> Option<Vec<String>> {
         self.as_mut().swap(to_lower(&k), v)
     }
-
-    fn pop(&mut self, k: &S) -> Option<Vec<String>> {
+    pub fn remove<S: Str>(&mut self, k: &S) -> Option<Vec<String>> {
         self.as_mut().pop(&to_lower(k))
     }
 
-    fn find_mut<'a>(&'a mut self, k: &S) -> Option<&'a mut Vec<String>> {
+    pub fn find_mut<'a, S: Str>(&'a mut self, k: &S) -> Option<&'a mut Vec<String>> {
         self.as_mut().find_mut(&to_lower(k))
     }
 }
