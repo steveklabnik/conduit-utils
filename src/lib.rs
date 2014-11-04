@@ -6,7 +6,7 @@ extern crate conduit;
 
 use std::iter;
 use std::io::net::ip::IpAddr;
-use std::collections::hashmap::{HashMap, Entries};
+use std::collections::hash_map::{HashMap, Entries};
 
 use conduit::{Method, Scheme, Host, Extensions, Headers, Request};
 
