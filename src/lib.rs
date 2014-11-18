@@ -165,17 +165,17 @@ impl HeaderMap {
         self.as_mut().clear()
     }
     pub fn find<'a, S: Str>(&'a self, key: &S) -> Option<&'a Vec<String>> {
-        self.as_ref().find(&to_lower(key))
+        self.as_ref().get(&to_lower(key))
     }
     pub fn insert<S: Str>(&mut self, k: S, v: Vec<String>) -> Option<Vec<String>> {
-        self.as_mut().swap(to_lower(&k), v)
+        self.as_mut().insert(to_lower(&k), v)
     }
     pub fn remove<S: Str>(&mut self, k: &S) -> Option<Vec<String>> {
-        self.as_mut().pop(&to_lower(k))
+        self.as_mut().remove(&to_lower(k))
     }
 
     pub fn find_mut<'a, S: Str>(&'a mut self, k: &S) -> Option<&'a mut Vec<String>> {
-        self.as_mut().find_mut(&to_lower(k))
+        self.as_mut().get_mut(&to_lower(k))
     }
 }
 
@@ -262,8 +262,14 @@ mod tests {
         headers.insert("Content-Type", vec!("text/html".to_string()));
         headers.insert("location", vec!("http://example.com".to_string()));
 
-        assert!(headers.iter().any(|t| t == ("content-type".to_string(), &vec!("text/html".to_string()))));
-        assert!(headers.iter().any(|t| t == ("location".to_string(), &vec!("http://example.com".to_string()))));
+        assert!(headers.iter().any(|t| {
+            t.0.as_slice() == "content-type" &&
+            t.1.as_slice() == &["text/html".to_string()]
+        }));
+        assert!(headers.iter().any(|t| {
+            t.0.as_slice() == "location" &&
+            t.1.as_slice() == &["http://example.com".to_string()]
+        }));
         assert!(headers.iter().count() == 2);
     }
 }
