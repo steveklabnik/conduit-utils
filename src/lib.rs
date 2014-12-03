@@ -71,7 +71,7 @@ pub trait RequestDelegator {
     }
 }
 
-impl<'a> Request for &'a mut RequestDelegator + 'a {
+impl<'a> Request for &'a mut (RequestDelegator + 'a) {
     fn http_version(&self) -> semver::Version {
         self.http_version()
     }
@@ -190,11 +190,10 @@ mod tests {
     use {RequestDelegator, HeaderMap};
 
     use std::collections::HashMap;
-    use conduit;
     use conduit::{Request, Method};
 
     struct OverrideRequest<'a> {
-        request: &'a mut Request + 'a
+        request: &'a mut (Request + 'a),
     }
 
     impl<'a> RequestDelegator for OverrideRequest<'a> {
@@ -207,16 +206,16 @@ mod tests {
         }
 
         fn method(&self) -> Method {
-            conduit::Get
+            Method::Get
         }
     }
 
     #[test]
     fn test_delegate() {
-        let request = &mut test::MockRequest::new(conduit::Head, "/hello") as &mut Request;
+        let request = &mut test::MockRequest::new(Method::Head, "/hello") as &mut Request;
         let new = OverrideRequest { request: request };
 
-        assert_eq!(new.method(), conduit::Get);
+        assert_eq!(new.method(), Method::Get);
         assert_eq!(new.path(), "/hello");
     }
 
