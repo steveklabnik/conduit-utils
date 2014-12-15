@@ -1,5 +1,6 @@
 #![feature(macro_rules)]
 #![feature(globs)]
+#![cfg_attr(test, deny(warnings))]
 
 extern crate semver;
 extern crate conduit;
@@ -142,8 +143,11 @@ impl HeaderMap {
         HeaderMap(headers)
     }
 
-    fn iter<'a>(&'a self) -> iter::Map<'a, InHeader<'a>, OutHeader<'a>, Entries<'a, String, Vec<String>>> {
-        self.as_ref().iter().map(|(k,v)| (to_lower(k), v))
+    fn iter<'a>(&'a self) -> iter::Map<InHeader<'a>, OutHeader<'a>,
+                                       Entries<String, Vec<String>>,
+                                       for<'a> fn(InHeader<'a>) -> OutHeader<'a>> {
+        fn foo<'a>((k, v): InHeader<'a>) -> OutHeader<'a> { (to_lower(k), v) }
+        self.as_ref().iter().map(foo)
     }
 
     fn as_ref<'a>(&'a self) -> &'a HashMap<String, Vec<String>> {
@@ -263,11 +267,11 @@ mod tests {
 
         assert!(headers.iter().any(|t| {
             t.0.as_slice() == "content-type" &&
-            t.1.as_slice() == &["text/html".to_string()]
+            t.1.as_slice() == ["text/html".to_string()]
         }));
         assert!(headers.iter().any(|t| {
             t.0.as_slice() == "location" &&
-            t.1.as_slice() == &["http://example.com".to_string()]
+            t.1.as_slice() == ["http://example.com".to_string()]
         }));
         assert!(headers.iter().count() == 2);
     }
