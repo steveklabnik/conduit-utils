@@ -1,14 +1,16 @@
 [package]
 
 name = "conduit-utils"
-version = "0.5.0"
-authors = ["wycats@gmail.com"]
+version = "0.5.1"
+authors = ["wycats@gmail.com",
+           "Alex Crichton <alex@alexcrichton.com>"]
+description = "Various utilities for conduit-based crates"
+license = "MIT"
+repository = "https://github.com/conduit-rust/conduit-utils"
 
-[dependencies.conduit]
-git = "https://github.com/conduit-rust/conduit.git"
+[dependencies]
+conduit = "0.5.0"
+semver = "0.1.0"
 
-[dev-dependencies.conduit-test]
-git = "https://github.com/conduit-rust/conduit-test.git"
-
-[dependencies.semver]
-git = "https://github.com/rust-lang/semver"
+[dev-dependencies]
+conduit-test = "0.5.0"
