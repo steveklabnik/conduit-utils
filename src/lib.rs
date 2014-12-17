@@ -12,8 +12,8 @@ use std::collections::hash_map::{HashMap, Entries};
 use conduit::{Method, Scheme, Host, Extensions, Headers, Request};
 
 pub trait RequestDelegator {
-    fn request<'a>(&'a self) -> &'a Request;
-    fn mut_request<'a>(&'a mut self) -> &'a mut Request;
+    fn request(&self) -> &Request;
+    fn mut_request(&mut self) -> &mut Request;
 
     fn http_version(&self) -> semver::Version {
         self.request().http_version()
@@ -31,19 +31,19 @@ pub trait RequestDelegator {
         self.request().scheme()
     }
 
-    fn host<'a>(&'a self) -> Host<'a> {
+    fn host(&self) -> Host {
         self.request().host()
     }
 
-    fn virtual_root<'a>(&'a self) -> Option<&'a str> {
+    fn virtual_root(&self) -> Option<&str> {
         self.request().virtual_root()
     }
 
-    fn path<'a>(&'a self) -> &'a str {
+    fn path(&self) -> &str {
         self.request().path()
     }
 
-    fn query_string<'a>(&'a self) -> Option<&'a str> {
+    fn query_string(&self) -> Option<&str> {
         self.request().query_string()
     }
 
@@ -55,19 +55,19 @@ pub trait RequestDelegator {
         self.request().content_length()
     }
 
-    fn headers<'a>(&'a self) -> &'a Headers {
+    fn headers(&self) -> &Headers {
         self.request().headers()
     }
 
-    fn body<'a>(&'a mut self) -> &'a mut Reader {
+    fn body(&mut self) -> &mut Reader {
         self.mut_request().body()
     }
 
-    fn extensions<'a>(&'a self) -> &'a Extensions {
+    fn extensions(&self) -> &Extensions {
         self.request().extensions()
     }
 
-    fn mut_extensions<'a>(&'a mut self) -> &'a mut Extensions {
+    fn mut_extensions(&mut self) -> &mut Extensions {
         self.mut_request().mut_extensions()
     }
 }
@@ -89,19 +89,19 @@ impl<'a> Request for &'a mut (RequestDelegator + 'a) {
         self.scheme()
     }
 
-    fn host<'a>(&'a self) -> Host<'a> {
+    fn host(&self) -> Host {
         self.host()
     }
 
-    fn virtual_root<'a>(&'a self) -> Option<&'a str> {
+    fn virtual_root(&self) -> Option<&str> {
         self.virtual_root()
     }
 
-    fn path<'a>(&'a self) -> &'a str {
+    fn path(&self) -> &str {
         self.path()
     }
 
-    fn query_string<'a>(&'a self) -> Option<&'a str> {
+    fn query_string(&self) -> Option<&str> {
         self.query_string()
     }
 
@@ -113,19 +113,19 @@ impl<'a> Request for &'a mut (RequestDelegator + 'a) {
         self.content_length()
     }
 
-    fn headers<'a>(&'a self) -> &'a Headers {
+    fn headers(&self) -> &Headers {
         self.headers()
     }
 
-    fn body<'a>(&'a mut self) -> &'a mut Reader {
+    fn body(&mut self) -> &mut Reader {
         self.body()
     }
 
-    fn extensions<'a>(&'a self) -> &'a Extensions {
+    fn extensions(&self) -> &Extensions {
         self.extensions()
     }
 
-    fn mut_extensions<'a>(&'a mut self) -> &'a mut Extensions {
+    fn mut_extensions(&mut self) -> &mut Extensions {
         self.mut_extensions()
     }
 }
@@ -143,20 +143,20 @@ impl HeaderMap {
         HeaderMap(headers)
     }
 
-    fn iter<'a>(&'a self) -> iter::Map<InHeader<'a>, OutHeader<'a>,
-                                       Entries<String, Vec<String>>,
-                                       for<'a> fn(InHeader<'a>) -> OutHeader<'a>> {
+    fn iter(&self) -> iter::Map<InHeader, OutHeader,
+                                Entries<String, Vec<String>>,
+                                for<'a> fn(InHeader<'a>) -> OutHeader<'a>> {
         fn foo<'a>((k, v): InHeader<'a>) -> OutHeader<'a> { (to_lower(k), v) }
         self.as_ref().iter().map(foo)
     }
 
-    fn as_ref<'a>(&'a self) -> &'a HashMap<String, Vec<String>> {
+    fn as_ref(&self) -> &HashMap<String, Vec<String>> {
         match *self {
             HeaderMap(ref map) => map
         }
     }
 
-    fn as_mut<'a>(&'a mut self) -> &'a mut HashMap<String, Vec<String>> {
+    fn as_mut(&mut self) -> &mut HashMap<String, Vec<String>> {
         match *self {
             HeaderMap(ref mut map) => map
         }
@@ -168,7 +168,7 @@ impl HeaderMap {
     pub fn clear(&mut self) {
         self.as_mut().clear()
     }
-    pub fn find<'a, S: Str>(&'a self, key: &S) -> Option<&'a Vec<String>> {
+    pub fn find<'a, S: Str>(&self, key: &S) -> Option<&Vec<String>> {
         self.as_ref().get(&to_lower(key))
     }
     pub fn insert<S: Str>(&mut self, k: S, v: Vec<String>) -> Option<Vec<String>> {
@@ -178,7 +178,7 @@ impl HeaderMap {
         self.as_mut().remove(&to_lower(k))
     }
 
-    pub fn find_mut<'a, S: Str>(&'a mut self, k: &S) -> Option<&'a mut Vec<String>> {
+    pub fn find_mut<'a, S: Str>(&mut self, k: &S) -> Option<&mut Vec<String>> {
         self.as_mut().get_mut(&to_lower(k))
     }
 }
@@ -197,15 +197,15 @@ mod tests {
     use conduit::{Request, Method};
 
     struct OverrideRequest<'a> {
-        request: &'a mut (Request + 'a),
+        request: &mut (Request + 'a),
     }
 
     impl<'a> RequestDelegator for OverrideRequest<'a> {
-        fn request<'a>(&'a self) -> &'a Request {
+        fn request(&self) -> &Request {
             let req: &Request = self.request; req
         }
 
-        fn mut_request<'a>(&'a mut self) -> &'a mut Request {
+        fn mut_request(&mut self) -> &mut Request {
             let req: &mut Request = self.request; req
         }
 
