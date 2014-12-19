@@ -131,19 +131,19 @@ impl<'a> Request for &'a mut (RequestDelegator + 'a) {
 }
 
 type RawHeaders = HashMap<String, Vec<String>>;
-type InHeader<'a> = (&'a String, &'a Vec<String>);
-type OutHeader<'a> = (String, &'a Vec<String>);
+pub type InHeader<'a> = (&'a String, &'a Vec<String>);
+pub type OutHeader<'a> = (String, &'a Vec<String>);
 
 #[deriving(PartialEq, Clone, Show)]
 pub struct HeaderMap(HashMap<String, Vec<String>>);
 
 impl HeaderMap {
-    fn normalize(headers: HashMap<String, Vec<String>>) -> HeaderMap {
+    pub fn normalize(headers: HashMap<String, Vec<String>>) -> HeaderMap {
         let headers = headers.into_iter().map(|(k,v)| (to_lower(&k), v)).collect();
         HeaderMap(headers)
     }
 
-    fn iter(&self) -> iter::Map<InHeader, OutHeader,
+    pub fn iter(&self) -> iter::Map<InHeader, OutHeader,
                                 Entries<String, Vec<String>>,
                                 for<'a> fn(InHeader<'a>) -> OutHeader<'a>> {
         fn foo<'a>((k, v): InHeader<'a>) -> OutHeader<'a> { (to_lower(k), v) }
@@ -197,7 +197,7 @@ mod tests {
     use conduit::{Request, Method};
 
     struct OverrideRequest<'a> {
-        request: &mut (Request + 'a),
+        request: &'a mut (Request + 'a),
     }
 
     impl<'a> RequestDelegator for OverrideRequest<'a> {
@@ -229,10 +229,10 @@ mod tests {
         map.insert("Content-Type".to_string(), vec!("text/html".to_string()));
         map.insert("location".to_string(), vec!("http://example.com".to_string()));
 
-        assert_eq!(map.find(&"content-type".to_string()), Some(&vec!("text/html".to_string())))
-        assert_eq!(map.find(&"Location".to_string()), Some(&vec!("http://example.com".to_string())))
-        assert_eq!(map.find(&"content-type"), Some(&vec!("text/html".to_string())))
-        assert_eq!(map.find(&"Location"), Some(&vec!("http://example.com".to_string())))
+        assert_eq!(map.find(&"content-type".to_string()), Some(&vec!("text/html".to_string())));
+        assert_eq!(map.find(&"Location".to_string()), Some(&vec!("http://example.com".to_string())));
+        assert_eq!(map.find(&"content-type"), Some(&vec!("text/html".to_string())));
+        assert_eq!(map.find(&"Location"), Some(&vec!("http://example.com".to_string())));
     }
 
     #[test]
@@ -241,10 +241,10 @@ mod tests {
         map.insert("Content-Type", vec!("text/html".to_string()));
         map.insert("location", vec!("http://example.com".to_string()));
 
-        assert_eq!(map.find(&"content-type".to_string()), Some(&vec!("text/html".to_string())))
-        assert_eq!(map.find(&"Location".to_string()), Some(&vec!("http://example.com".to_string())))
-        assert_eq!(map.find(&"content-type"), Some(&vec!("text/html".to_string())))
-        assert_eq!(map.find(&"Location"), Some(&vec!("http://example.com".to_string())))
+        assert_eq!(map.find(&"content-type".to_string()), Some(&vec!("text/html".to_string())));
+        assert_eq!(map.find(&"Location".to_string()), Some(&vec!("http://example.com".to_string())));
+        assert_eq!(map.find(&"content-type"), Some(&vec!("text/html".to_string())));
+        assert_eq!(map.find(&"Location"), Some(&vec!("http://example.com".to_string())));
     }
 
     #[test]
@@ -253,10 +253,10 @@ mod tests {
         map.insert("Content-Type".to_string(), vec!("text/html".to_string()));
 
         let headers = HeaderMap::normalize(map);
-        assert_eq!(headers.find(&"Content-Type".to_string()), Some(&vec!("text/html".to_string())))
-        assert_eq!(headers.find(&"Content-Type"), Some(&vec!("text/html".to_string())))
-        assert_eq!(headers.find(&"content-type".to_string()), Some(&vec!("text/html".to_string())))
-        assert_eq!(headers.find(&"content-type"), Some(&vec!("text/html".to_string())))
+        assert_eq!(headers.find(&"Content-Type".to_string()), Some(&vec!("text/html".to_string())));
+        assert_eq!(headers.find(&"Content-Type"), Some(&vec!("text/html".to_string())));
+        assert_eq!(headers.find(&"content-type".to_string()), Some(&vec!("text/html".to_string())));
+        assert_eq!(headers.find(&"content-type"), Some(&vec!("text/html".to_string())));
     }
 
     #[test]
