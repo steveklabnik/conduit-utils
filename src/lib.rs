@@ -147,7 +147,8 @@ impl HeaderMap {
                                 Entries<String, Vec<String>>,
                                 for<'a> fn(InHeader<'a>) -> OutHeader<'a>> {
         fn foo<'a>((k, v): InHeader<'a>) -> OutHeader<'a> { (to_lower(k), v) }
-        self.as_ref().iter().map(foo)
+        let f: for<'a> fn(InHeader<'a>) -> OutHeader<'a> = foo;
+        self.as_ref().iter().map(f)
     }
 
     fn as_ref(&self) -> &HashMap<String, Vec<String>> {
