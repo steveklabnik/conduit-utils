@@ -7,7 +7,7 @@ extern crate conduit;
 
 use std::iter;
 use std::io::net::ip::IpAddr;
-use std::collections::hash_map::{HashMap, Entries};
+use std::collections::hash_map::{HashMap, Iter};
 
 use conduit::{Method, Scheme, Host, Extensions, Headers, Request};
 
@@ -144,7 +144,7 @@ impl HeaderMap {
     }
 
     pub fn iter(&self) -> iter::Map<InHeader, OutHeader,
-                                Entries<String, Vec<String>>,
+                                Iter<String, Vec<String>>,
                                 for<'a> fn(InHeader<'a>) -> OutHeader<'a>> {
         fn foo<'a>((k, v): InHeader<'a>) -> OutHeader<'a> { (to_lower(k), v) }
         let f: for<'a> fn(InHeader<'a>) -> OutHeader<'a> = foo;
