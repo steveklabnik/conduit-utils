@@ -134,7 +134,7 @@ type RawHeaders = HashMap<String, Vec<String>>;
 pub type InHeader<'a> = (&'a String, &'a Vec<String>);
 pub type OutHeader<'a> = (String, &'a Vec<String>);
 
-#[deriving(PartialEq, Clone, Show)]
+#[derive(PartialEq, Clone, Show)]
 pub struct HeaderMap(HashMap<String, Vec<String>>);
 
 impl HeaderMap {
