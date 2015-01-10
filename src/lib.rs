@@ -1,6 +1,5 @@
-#![feature(macro_rules)]
-#![feature(globs)]
 #![cfg_attr(test, deny(warnings))]
+#![cfg_attr(test, allow(unstable))]
 
 extern crate semver;
 extern crate conduit;
@@ -51,7 +50,7 @@ pub trait RequestDelegator {
         self.request().remote_ip()
     }
 
-    fn content_length(&self) -> Option<uint> {
+    fn content_length(&self) -> Option<u64> {
         self.request().content_length()
     }
 
@@ -109,7 +108,7 @@ impl<'a> Request for &'a mut (RequestDelegator + 'a) {
         self.remote_ip()
     }
 
-    fn content_length(&self) -> Option<uint> {
+    fn content_length(&self) -> Option<u64> {
         self.content_length()
     }
 
@@ -163,7 +162,7 @@ impl HeaderMap {
         }
     }
 
-    pub fn len(&self) -> uint {
+    pub fn len(&self) -> usize {
         self.as_ref().len()
     }
     pub fn clear(&mut self) {
