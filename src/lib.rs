@@ -5,7 +5,7 @@ extern crate semver;
 extern crate conduit;
 
 use std::iter;
-use std::io::net::ip::IpAddr;
+use std::old_io::net::ip::IpAddr;
 use std::collections::hash_map::{HashMap, Iter};
 
 use conduit::{Method, Scheme, Host, Extensions, Headers, Request};
@@ -73,59 +73,59 @@ pub trait RequestDelegator {
 
 impl<'a> Request for &'a mut (RequestDelegator + 'a) {
     fn http_version(&self) -> semver::Version {
-        self.http_version()
+        (**self).http_version()
     }
 
     fn conduit_version(&self) -> semver::Version {
-        self.conduit_version()
+        (**self).conduit_version()
     }
 
     fn method(&self) -> Method {
-        self.method()
+        (**self).method()
     }
 
     fn scheme(&self) -> Scheme {
-        self.scheme()
+        (**self).scheme()
     }
 
     fn host(&self) -> Host {
-        self.host()
+        (**self).host()
     }
 
     fn virtual_root(&self) -> Option<&str> {
-        self.virtual_root()
+        (**self).virtual_root()
     }
 
     fn path(&self) -> &str {
-        self.path()
+        (**self).path()
     }
 
     fn query_string(&self) -> Option<&str> {
-        self.query_string()
+        (**self).query_string()
     }
 
     fn remote_ip(&self) -> IpAddr {
-        self.remote_ip()
+        (**self).remote_ip()
     }
 
     fn content_length(&self) -> Option<u64> {
-        self.content_length()
+        (**self).content_length()
     }
 
     fn headers(&self) -> &Headers {
-        self.headers()
+        (**self).headers()
     }
 
     fn body(&mut self) -> &mut Reader {
-        self.body()
+        (**self).body()
     }
 
     fn extensions(&self) -> &Extensions {
-        self.extensions()
+        (**self).extensions()
     }
 
     fn mut_extensions(&mut self) -> &mut Extensions {
-        self.mut_extensions()
+        (**self).mut_extensions()
     }
 }
 
