@@ -1,5 +1,6 @@
+#![feature(core, unicode)]
 #![cfg_attr(test, deny(warnings))]
-#![cfg_attr(test, allow(unstable))]
+#![cfg_attr(test, feature(collections))]
 
 extern crate semver;
 extern crate conduit;
