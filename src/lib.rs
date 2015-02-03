@@ -1,6 +1,5 @@
 #![feature(core, unicode)]
 #![cfg_attr(test, deny(warnings))]
-#![cfg_attr(test, feature(collections))]
 
 extern crate semver;
 extern crate conduit;
@@ -134,7 +133,7 @@ type RawHeaders = HashMap<String, Vec<String>>;
 pub type InHeader<'a> = (&'a String, &'a Vec<String>);
 pub type OutHeader<'a> = (String, &'a Vec<String>);
 
-#[derive(PartialEq, Clone, Show)]
+#[derive(PartialEq, Clone, Debug)]
 pub struct HeaderMap(HashMap<String, Vec<String>>);
 
 impl HeaderMap {
