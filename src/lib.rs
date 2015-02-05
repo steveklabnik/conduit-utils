@@ -142,8 +142,7 @@ impl HeaderMap {
         HeaderMap(headers)
     }
 
-    pub fn iter(&self) -> iter::Map<InHeader, OutHeader,
-                                Iter<String, Vec<String>>,
+    pub fn iter(&self) -> iter::Map<Iter<String, Vec<String>>,
                                 for<'a> fn(InHeader<'a>) -> OutHeader<'a>> {
         fn foo<'a>((k, v): InHeader<'a>) -> OutHeader<'a> { (to_lower(k), v) }
         let f: for<'a> fn(InHeader<'a>) -> OutHeader<'a> = foo;
