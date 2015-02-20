@@ -1,4 +1,4 @@
-#![feature(core, unicode)]
+#![feature(core, unicode, old_io)]
 #![cfg_attr(test, deny(warnings))]
 
 extern crate semver;
