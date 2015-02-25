@@ -1,11 +1,12 @@
-#![feature(core, unicode, old_io)]
+#![feature(core, unicode, io, net)]
 #![cfg_attr(test, deny(warnings))]
 
 extern crate semver;
 extern crate conduit;
 
 use std::iter;
-use std::old_io::net::ip::IpAddr;
+use std::io::prelude::*;
+use std::net::IpAddr;
 use std::collections::hash_map::{HashMap, Iter};
 
 use conduit::{Method, Scheme, Host, Extensions, Headers, Request};
@@ -58,7 +59,7 @@ pub trait RequestDelegator {
         self.request().headers()
     }
 
-    fn body(&mut self) -> &mut Reader {
+    fn body(&mut self) -> &mut Read {
         self.mut_request().body()
     }
 
@@ -116,7 +117,7 @@ impl<'a> Request for &'a mut (RequestDelegator + 'a) {
         (**self).headers()
     }
 
-    fn body(&mut self) -> &mut Reader {
+    fn body(&mut self) -> &mut Read {
         (**self).body()
     }
 
