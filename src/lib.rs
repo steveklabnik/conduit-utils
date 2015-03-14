@@ -1,4 +1,4 @@
-#![feature(core, collections, io, net)]
+#![feature(core, collections, net)]
 #![cfg_attr(test, deny(warnings))]
 
 extern crate semver;
