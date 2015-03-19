@@ -1,4 +1,4 @@
-#![feature(core, collections, net)]
+#![feature(core, collections)]
 #![cfg_attr(test, deny(warnings))]
 
 extern crate semver;
@@ -6,7 +6,7 @@ extern crate conduit;
 
 use std::iter;
 use std::io::prelude::*;
-use std::net::IpAddr;
+use std::net::SocketAddr;
 use std::collections::hash_map::{HashMap, Iter};
 
 use conduit::{Method, Scheme, Host, Extensions, Headers, Request};
@@ -47,8 +47,8 @@ pub trait RequestDelegator {
         self.request().query_string()
     }
 
-    fn remote_ip(&self) -> IpAddr {
-        self.request().remote_ip()
+    fn remote_addr(&self) -> SocketAddr {
+        self.request().remote_addr()
     }
 
     fn content_length(&self) -> Option<u64> {
@@ -105,8 +105,8 @@ impl<'a> Request for &'a mut (RequestDelegator + 'a) {
         (**self).query_string()
     }
 
-    fn remote_ip(&self) -> IpAddr {
-        (**self).remote_ip()
+    fn remote_addr(&self) -> SocketAddr {
+        (**self).remote_addr()
     }
 
     fn content_length(&self) -> Option<u64> {
