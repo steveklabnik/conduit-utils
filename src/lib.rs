@@ -1,4 +1,4 @@
-#![feature(core, collections)]
+#![feature(collections)]
 #![cfg_attr(test, deny(warnings))]
 
 extern crate semver;
@@ -168,23 +168,23 @@ impl HeaderMap {
     pub fn clear(&mut self) {
         self.as_mut().clear()
     }
-    pub fn find<'a, S: Str>(&self, key: &S) -> Option<&Vec<String>> {
+    pub fn find(&self, key: &str) -> Option<&Vec<String>> {
         self.as_ref().get(&to_lower(key))
     }
-    pub fn insert<S: Str>(&mut self, k: S, v: Vec<String>) -> Option<Vec<String>> {
+    pub fn insert(&mut self, k: &str, v: Vec<String>) -> Option<Vec<String>> {
         self.as_mut().insert(to_lower(&k), v)
     }
-    pub fn remove<S: Str>(&mut self, k: &S) -> Option<Vec<String>> {
+    pub fn remove(&mut self, k: &str) -> Option<Vec<String>> {
         self.as_mut().remove(&to_lower(k))
     }
 
-    pub fn find_mut<'a, S: Str>(&mut self, k: &S) -> Option<&mut Vec<String>> {
+    pub fn find_mut(&mut self, k: &str) -> Option<&mut Vec<String>> {
         self.as_mut().get_mut(&to_lower(k))
     }
 }
 
-fn to_lower<S: Str>(string: &S) -> String {
-    string.as_slice().to_lowercase()
+fn to_lower(string: &str) -> String {
+    string.to_lowercase()
 }
 
 #[cfg(test)]
@@ -226,8 +226,8 @@ mod tests {
     #[test]
     fn test_header_map() {
         let mut map = HeaderMap(HashMap::new());
-        map.insert("Content-Type".to_string(), vec!("text/html".to_string()));
-        map.insert("location".to_string(), vec!("http://example.com".to_string()));
+        map.insert("Content-Type", vec!("text/html".to_string()));
+        map.insert("location", vec!("http://example.com".to_string()));
 
         assert_eq!(map.find(&"content-type".to_string()), Some(&vec!("text/html".to_string())));
         assert_eq!(map.find(&"Location".to_string()), Some(&vec!("http://example.com".to_string())));
@@ -266,12 +266,12 @@ mod tests {
         headers.insert("location", vec!("http://example.com".to_string()));
 
         assert!(headers.iter().any(|t| {
-            t.0.as_slice() == "content-type" &&
-            t.1.as_slice() == ["text/html".to_string()]
+            t.0 == "content-type" &&
+            &t.1[..] == ["text/html".to_string()]
         }));
         assert!(headers.iter().any(|t| {
-            t.0.as_slice() == "location" &&
-            t.1.as_slice() == ["http://example.com".to_string()]
+            t.0 == "location" &&
+            &t.1[..] == ["http://example.com".to_string()]
         }));
         assert!(headers.iter().count() == 2);
     }
