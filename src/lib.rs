@@ -189,7 +189,7 @@ fn to_lower(string: &str) -> String {
 
 #[cfg(test)]
 mod tests {
-    extern crate "conduit-test" as test;
+    extern crate conduit_test as test;
 
     use {RequestDelegator, HeaderMap};
 
@@ -216,7 +216,7 @@ mod tests {
 
     #[test]
     fn test_delegate() {
-        let request = &mut test::MockRequest::new(Method::Head, "/hello") as &mut Request;
+        let request = &mut test::MockRequest::new(Method::Head, "/hello");
         let new = OverrideRequest { request: request };
 
         assert_eq!(new.method(), Method::Get);
