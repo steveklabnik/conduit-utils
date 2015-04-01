@@ -1,4 +1,3 @@
-#![feature(collections)]
 #![cfg_attr(test, deny(warnings))]
 
 extern crate semver;
@@ -184,7 +183,7 @@ impl HeaderMap {
 }
 
 fn to_lower(string: &str) -> String {
-    string.to_lowercase()
+    string.chars().flat_map(|c| c.to_lowercase()).collect()
 }
 
 #[cfg(test)]
